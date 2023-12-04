@@ -1,22 +1,22 @@
-# titanoboa.jupyterlab.extension
+# titanoboa-jupyterlab-extension
 
 [![Github Actions Status](https://github.com/DanielSchiavini/titanoboa-jupyterlab/workflows/Build/badge.svg)](https://github.com/DanielSchiavini/titanoboa-jupyterlab/actions/workflows/build.yml)
 A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.
 
-This extension is composed of a Python package named `titanoboa.jupyterlab.extension`
+This extension is composed of a Python package named `titanoboa-jupyterlab-extension`
 for the server extension and a NPM package named `titanoboa-jupyterlab-extension`
 for the frontend extension.
 
 ## Requirements
 
-- JupyterLab >= 4.0.0b0
+- JupyterLab >= 4.0.0
 
 ## Install
 
 To install the extension, execute:
 
 ```bash
-pip install titanoboa.jupyterlab.extension
+pip install titanoboa-jupyterlab-extension
 ```
 
 ## Uninstall
@@ -24,7 +24,7 @@ pip install titanoboa.jupyterlab.extension
 To remove the extension, execute:
 
 ```bash
-pip uninstall titanoboa.jupyterlab.extension
+pip uninstall titanoboa-jupyterlab-extension
 ```
 
 ## Troubleshoot
@@ -55,13 +55,13 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Change directory to the titanoboa.jupyterlab.extension directory
+# Change directory to the titanoboa-jupyterlab-extension directory
 # Install package in development mode
 pip install -e ".[test]"
 # Link your development version of the extension with JupyterLab
 jupyter labextension develop . --overwrite
 # Server extension must be manually installed in develop mode
-jupyter server extension enable titanoboa.jupyterlab.extension
+jupyter server extension enable titanoboa-jupyterlab-extension
 # Rebuild extension Typescript source after making changes
 jlpm build
 ```
@@ -87,8 +87,8 @@ jupyter lab build --minimize=False
 
 ```bash
 # Server extension must be manually disabled in develop mode
-jupyter server extension disable titanoboa.jupyterlab.extension
-pip uninstall titanoboa.jupyterlab.extension
+jupyter server extension disable titanoboa-jupyterlab-extension
+pip uninstall titanoboa-jupyterlab-extension
 ```
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
@@ -112,7 +112,7 @@ jupyter labextension develop . --overwrite
 To execute them, run:
 
 ```sh
-pytest -vv -r ap --cov titanoboa.jupyterlab.extension
+pytest -vv -r ap --cov titanoboa-jupyterlab-extension
 ```
 
 #### Frontend tests
@@ -128,7 +128,7 @@ jlpm test
 
 #### Integration tests
 
-This extension uses [Playwright](https://playwright.dev/docs/intro/) for the integration tests (aka user level tests).
+This extension uses [Playwright](https://playwright.dev/docs/intro) for the integration tests (aka user level tests).
 More precisely, the JupyterLab helper [Galata](https://github.com/jupyterlab/jupyterlab/tree/master/galata) is used to handle testing the extension in JupyterLab.
 
 More information are provided within the [ui-tests](./ui-tests/README.md) README.

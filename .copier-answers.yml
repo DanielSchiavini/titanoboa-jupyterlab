@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v4.0.0
+_commit: v4.2.4
 _src_path: https://github.com/jupyterlab/extension-template
 author_email: daniel@schiavini.nl
 author_name: Daniel Schiavini
@@ -13,7 +13,7 @@ mimetype: ''
 mimetype_name: ''
 project_short_description: A JupyterLab extension for integrating with the Vyper programming
     language by using Titanoboa.
-python_name: titanoboa.jupyterlab.extension
+python_name: titanoboa-jupyterlab-extension
 repository: https://github.com/DanielSchiavini/titanoboa-jupyterlab
 test: true
 viewer_name: ''

@@ -15,13 +15,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd) => {
     console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!');
 
-    requestAPI<any>('get_example')
+    requestAPI<any>('get-example')
       .then(data => {
         console.log(data);
       })
       .catch(reason => {
         console.error(
-          `The titanoboa.jupyterlab.extension server extension appears to be missing.\n${reason}`
+          `The titanoboa-jupyterlab-extension server extension appears to be missing.\n${reason}`
         );
       });
   }
