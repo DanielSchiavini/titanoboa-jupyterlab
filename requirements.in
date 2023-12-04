@@ -1,0 +1,5 @@
+copier~=7.2
+jinja2-time
+pydantic<2.0.0
+titanoboa[forking-recommended] @ git+https://github.com/vyperlang/titanoboa
+pip-tools
