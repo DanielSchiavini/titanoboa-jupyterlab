@@ -6,14 +6,14 @@ import {
 import { requestAPI } from './handler';
 
 /**
- * Initialization data for the Titanoboa JupyterLab Vyper extension extension.
+ * Initialization data for the titanoboa-jupyterlab-extension extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'Titanoboa JupyterLab Vyper extension:plugin',
+  id: 'titanoboa-jupyterlab-extension:plugin',
   description: 'A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.',
   autoStart: true,
   activate: (app: JupyterFrontEnd) => {
-    console.log('JupyterLab extension Titanoboa JupyterLab Vyper extension is activated!');
+    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!');
 
     requestAPI<any>('get_example')
       .then(data => {

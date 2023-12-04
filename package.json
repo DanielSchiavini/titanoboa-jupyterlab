@@ -1,5 +1,5 @@
 {
-  "name": "Titanoboa JupyterLab Vyper extension",
+  "name": "titanoboa-jupyterlab-extension",
   "version": "0.1.0",
   "description": "A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.",
   "keywords": [

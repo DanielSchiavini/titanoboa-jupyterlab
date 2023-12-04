@@ -4,7 +4,7 @@
 A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.
 
 This extension is composed of a Python package named `titanoboa.jupyterlab.extension`
-for the server extension and a NPM package named `Titanoboa JupyterLab Vyper extension`
+for the server extension and a NPM package named `titanoboa-jupyterlab-extension`
 for the frontend extension.
 
 ## Requirements
@@ -93,7 +93,7 @@ pip uninstall titanoboa.jupyterlab.extension
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
 command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `Titanoboa JupyterLab Vyper extension` within that folder.
+folder is located. Then you can remove the symlink named `titanoboa-jupyterlab-extension` within that folder.
 
 ### Testing the extension
 

@@ -8,7 +8,7 @@ file_extension: ''
 has_binder: false
 has_settings: false
 kind: server
-labextension_name: Titanoboa JupyterLab Vyper extension
+labextension_name: titanoboa-jupyterlab-extension
 mimetype: ''
 mimetype_name: ''
 project_short_description: A JupyterLab extension for integrating with the Vyper programming

@@ -16,6 +16,6 @@ test('should emit an activation console message', async ({ page }) => {
   await page.goto();
 
   expect(
-    logs.filter(s => s === 'JupyterLab extension Titanoboa JupyterLab Vyper extension is activated!')
+    logs.filter(s => s === 'JupyterLab extension titanoboa-jupyterlab-extension is activated!')
   ).toHaveLength(1);
 });

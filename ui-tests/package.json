@@ -1,7 +1,7 @@
 {
-  "name": "Titanoboa JupyterLab Vyper extension-ui-tests",
+  "name": "titanoboa-jupyterlab-extension-ui-tests",
   "version": "1.0.0",
-  "description": "JupyterLab Titanoboa JupyterLab Vyper extension Integration Tests",
+  "description": "JupyterLab titanoboa-jupyterlab-extension Integration Tests",
   "private": true,
   "scripts": {
     "start": "jupyter lab --config jupyter_server_test_config.py",

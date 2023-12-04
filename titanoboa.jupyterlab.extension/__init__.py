@@ -6,7 +6,7 @@ from .handlers import setup_handlers
 def _jupyter_labextension_paths():
     return [{
         "src": "labextension",
-        "dest": "Titanoboa JupyterLab Vyper extension"
+        "dest": "titanoboa-jupyterlab-extension"
     }]
 
 
