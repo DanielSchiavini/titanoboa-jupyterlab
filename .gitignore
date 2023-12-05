@@ -123,3 +123,6 @@ dmypy.json
 
 # Yarn cache
 .yarn/
+
+# Jupyter Notebook in root
+/*.ipynb
