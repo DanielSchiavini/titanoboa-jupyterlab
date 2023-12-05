@@ -37,7 +37,7 @@
         "clean": "jlpm clean:lib",
         "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
         "clean:lintcache": "rimraf .eslintcache .stylelintcache",
-        "clean:labextension": "rimraf titanoboa-jupyterlab-extension/labextension titanoboa-jupyterlab-extension/_version.py",
+        "clean:labextension": "rimraf titanoboa_jupyterlab/labextension titanoboa_jupyterlab/_version.py",
         "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
         "eslint": "jlpm eslint:check --fix",
         "eslint:check": "eslint . --cache --ext .ts,.tsx",
@@ -98,17 +98,17 @@
     },
     "jupyterlab": {
         "discovery": {
-            "server": {
-                "managers": [
-                    "pip"
-                ],
-                "base": {
-                    "name": "titanoboa-jupyterlab-extension"
-                }
+        "server": {
+            "managers": [
+                "pip"
+            ],
+            "base": {
+                "name": "titanoboa_jupyterlab"
             }
+        }
         },
         "extension": true,
-        "outputDir": "titanoboa-jupyterlab-extension/labextension"
+        "outputDir": "titanoboa_jupyterlab/labextension"
     },
     "eslintIgnore": [
         "node_modules",

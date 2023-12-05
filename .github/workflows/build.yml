@@ -36,9 +36,9 @@ jobs:
         set -eux
         python -m pip install .[test]
 
-        pytest -vv -r ap --cov titanoboa-jupyterlab-extension
+        pytest -vv -r ap --cov titanoboa_jupyterlab
         jupyter server extension list
-        jupyter server extension list 2>&1 | grep -ie "titanoboa-jupyterlab-extension.*OK"
+        jupyter server extension list 2>&1 | grep -ie "titanoboa_jupyterlab.*OK"
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "titanoboa-jupyterlab-extension.*OK"
@@ -50,13 +50,13 @@ jobs:
 
         pip install build
         python -m build
-        pip uninstall -y "titanoboa-jupyterlab-extension" jupyterlab
+        pip uninstall -y "titanoboa_jupyterlab" jupyterlab
 
     - name: Upload extension packages
       uses: actions/upload-artifact@v3
       with:
         name: extension-artifacts
-        path: dist/titanoboa-jupyterlab-extension*
+        path: dist/titanoboa_jupyterlab*
         if-no-files-found: error
 
   test_isolated:
@@ -79,11 +79,11 @@ jobs:
         sudo rm -rf $(which node)
         sudo rm -rf $(which node)
 
-        pip install "jupyterlab>=4.0.0,<5" titanoboa-jupyterlab-extension*.whl
+        pip install "jupyterlab>=4.0.0,<5" titanoboa_jupyterlab*.whl
 
 
         jupyter server extension list
-        jupyter server extension list 2>&1 | grep -ie "titanoboa-jupyterlab-extension.*OK"
+        jupyter server extension list 2>&1 | grep -ie "titanoboa_jupyterlab.*OK"
 
         jupyter labextension list
         jupyter labextension list 2>&1 | grep -ie "titanoboa-jupyterlab-extension.*OK"
@@ -112,7 +112,7 @@ jobs:
     - name: Install the extension
       run: |
         set -eux
-        python -m pip install "jupyterlab>=4.0.0,<5" titanoboa-jupyterlab-extension*.whl
+        python -m pip install "jupyterlab>=4.0.0,<5" titanoboa_jupyterlab*.whl
 
     - name: Install dependencies
       working-directory: ui-tests
@@ -141,7 +141,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-        name: titanoboa-jupyterlab-extension-playwright-tests
+        name: titanoboa_jupyterlab-playwright-tests
         path: |
           ui-tests/test-results
           ui-tests/playwright-report

@@ -83,7 +83,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       })
       .catch(reason => {
         console.error(
-          `The titanoboa-jupyterlab-extension server extension appears to be missing.\n${reason}`
+          `The titanoboa_jupyterlab server extension appears to be missing.\n${reason}`
         );
       });
   }
