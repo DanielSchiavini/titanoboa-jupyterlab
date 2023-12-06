@@ -1,19 +1,44 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { BrowserProvider, ethers, TransactionRequest } from 'ethers';
-import { requestAPI } from './handler';
+import { BrowserProvider, Eip1193Provider, TransactionRequest } from 'ethers';
+import { sendTransaction, setSigner } from './api';
 
+/**
+ * Load the signer via ethers user and store it in the backend.
+ */
+const loadSigner = async (token: string) => {
+  console.log('Loading the user\'s signer');
+  const provider = getProvider();
+  const signer = await provider.getSigner();
+  const address = await signer.getAddress();
+  return setSigner(token, address);
+};
+
+/**
+ * Sign a transaction via ethers and send it to the backend.
+ */
+const signTransaction = async (token: string, transaction: TransactionRequest) => {
+  console.log('Starting to sign transaction');
+  const provider = getProvider();
+  const signer = await provider.getSigner();
+  const response = await signer.sendTransaction(transaction);
+  return sendTransaction(token, response);
+};
 
 declare global {
+  // noinspection JSUnusedGlobalSymbols
   interface Window {
-        ethereum: ethers.Eip1193Provider;
-        _titanoboa?: {
-          loadSigner: (key: string) => Promise<void>;
-          signTransaction: (key: string, tx: TransactionRequest) => Promise<void>;
-        };
-    }
+    // this variable is injected by the ethers package
+    ethereum: Eip1193Provider;
+    // this variable is injected by this extension
+    _titanoboa?: {
+      loadSigner: typeof loadSigner;
+      signTransaction: typeof signTransaction;
+    };
+  }
 }
 
-const stringify = (data: unknown) => JSON.stringify(data, (_, v) => typeof v === 'bigint' ? v.toString() : v);
+// we delay the initialization of the provider until used
+const getProvider = () => new BrowserProvider(window.ethereum);
 
 /**
  * Initialization data for the titanoboa-jupyterlab-extension extension.
@@ -22,27 +47,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: 'titanoboa-jupyterlab-extension:plugin',
   description: 'A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.',
   autoStart: true,
+  /**
+   * Activate the extension and register the callbacks that are used by the
+   * BrowserSigner to interact with `ethers`.
+   */
   activate: async (app: JupyterFrontEnd) => {
-    window._titanoboa = {
-      loadSigner: async key => {
-        console.log('loadSigner');
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        return requestAPI<void>("set_signer", {
-          method: "POST",
-          body: JSON.stringify({ address: await signer.getAddress(), key }),
-        });
-      },
-      signTransaction: async (key, tx) => {
-        const provider = new BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const response = await signer.sendTransaction(tx);
-        return requestAPI<void>("send_transaction", {
-          method: "POST",
-          body: stringify({ ...response, key }),
-        });
-      },
-    };
+    window._titanoboa = {loadSigner, signTransaction};
     console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!', app, window._titanoboa);
   }
 };
