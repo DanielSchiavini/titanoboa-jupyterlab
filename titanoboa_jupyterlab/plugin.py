@@ -1,5 +1,5 @@
-from contextlib import contextmanager
 from asyncio import iscoroutinefunction, get_running_loop, Future, sleep, ensure_future, tasks
+from contextlib import contextmanager
 from inspect import isawaitable
 from typing import Any
 
@@ -13,8 +13,6 @@ from sys import stdout, stderr
 import ipykernel.comm
 
 from eth_utils import to_checksum_address
-import IPython.display as frontend
-
 
 ZMQ_POLLOUT = 2  # zmq.POLLOUT without zmq dependency
 

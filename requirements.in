@@ -4,3 +4,4 @@ pydantic<2.0.0
 titanoboa[forking-recommended] @ git+https://github.com/vyperlang/titanoboa
 pip-tools
 jupyterlab==4
+shared-memory-dict

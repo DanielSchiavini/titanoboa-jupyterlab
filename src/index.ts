@@ -1,18 +1,19 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { SessionManager, KernelManager } from '@jupyterlab/services';
-// import { Kernel } from '@jupyterlab/services';
-import { IKernelStatusModel } from '@jupyterlab/apputils';
-// import { KernelError, Notebook, NotebookActions } from '@jupyterlab/notebook';
-
+import { BrowserProvider, ethers, TransactionRequest } from 'ethers';
 import { requestAPI } from './handler';
-import { ethers } from 'ethers';
+
 
 declare global {
-    // noinspection JSUnusedGlobalSymbols
   interface Window {
         ethereum: ethers.Eip1193Provider;
+        _titanoboa?: {
+          loadSigner: (key: string) => Promise<void>;
+          signTransaction: (key: string, tx: TransactionRequest) => Promise<void>;
+        };
     }
 }
+
+const stringify = (data: unknown) => JSON.stringify(data, (_, v) => typeof v === 'bigint' ? v.toString() : v);
 
 /**
  * Initialization data for the titanoboa-jupyterlab-extension extension.
@@ -21,95 +22,28 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: 'titanoboa-jupyterlab-extension:plugin',
   description: 'A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.',
   autoStart: true,
-  requires: [IKernelStatusModel],
-  activate: async (app: JupyterFrontEnd, kernel: IKernelStatusModel) => {
-    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!', {
-        frontEnd: app, kernel
-    });
-
-    const kernelManager = new KernelManager();
-    kernelManager.runningChanged.connect((_, data) => {
-      console.log('runningChanged', data);
-      data.forEach(model => {
-
-        const conn = kernelManager.connectTo({ model });
-        conn.connectionStatusChanged.connect((_, data) => {
-          console.log('connectionStatusChanged', data);
+  activate: async (app: JupyterFrontEnd) => {
+    window._titanoboa = {
+      loadSigner: async key => {
+        console.log('loadSigner');
+        const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        return requestAPI<void>("set_signer", {
+          method: "POST",
+          body: JSON.stringify({ address: await signer.getAddress(), key }),
         });
-        conn.registerCommTarget('test_comm', async (...msg) => {
-          console.log("test_comm called after change", msg);
+      },
+      signTransaction: async (key, tx) => {
+        const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const response = await signer.sendTransaction(tx);
+        return requestAPI<void>("send_transaction", {
+          method: "POST",
+          body: stringify({ ...response, key }),
         });
-      })
-    });
-    const sessionManager = new SessionManager({ standby: 'never', kernelManager });
-
-    console.log("kernels", await kernelManager.ready);
-    console.log("kernelManager", kernelManager);
-    console.log("sessionManager", sessionManager);
-    const kernels = Array.from(kernelManager.running()).map(model => kernelManager.connectTo({ model }));
-    kernels[0].registerCommTarget('test_comm', async (...msg) => {
-        console.log("test_comm called", msg);
-        // console.log("ENTER 2", comm);
-        // console.log("ENTER 3", msg.content.data);
-        // setTimeout(() => {
-        //     comm.send({"success": "hello", "echo": msg.content.data});
-        //     comm.close();
-        //     console.log(comm);
-        // }, 350);
-    });
-
-    console.log("kernels", kernels);
-    // console.log('connect', app.serviceManager.events.stream.connect((_, data) => console.log('event', JSON.stringify(data))));
-    console.log('terminals', Array.from(app.serviceManager.terminals.running()));
-
-    // Initialize ethers
-    const provider = new ethers.BrowserProvider(window.ethereum);
-
-    // check that we have a signer for this account
-    app.commands.addCommand('get_signer', {
-      label: 'Get Signer',
-      execute: async (msg) => {
-          console.log("get_signer called", msg);
-          const account = (msg as any).content.data.account;
-          try {
-            const signer = await provider.getSigner(account);
-              console.log("success", signer)
-              // c.send({"success": signer});
-          } catch (error) {
-              console.error(error);
-              // c.send({"error": error});
-          }
       },
-    });
-
-
-    app.commands.addCommand('send_transaction', {
-      label: 'Send Transaction',
-      execute: async (msg) => {
-          console.log("send_transaction called", msg);
-          const tx_data = (msg as any).content.data.transaction_data;
-          const account = (msg as any).content.data.account;
-          try {
-            const signer = await provider.getSigner(account);
-            const response = await signer.sendTransaction(tx_data);
-              console.log("success", response)
-              // c.send({"success": signer});
-          } catch (error) {
-              console.error(error);
-              // c.send({"error": error});
-          }
-      },
-    });
-
-    requestAPI<any>('get-example')
-      .then(data => {
-        console.log(data);
-      })
-      .catch(reason => {
-        console.error(
-          `The titanoboa_jupyterlab server extension appears to be missing.\n${reason}`
-        );
-      });
+    };
+    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!', app, window._titanoboa);
   }
 };
 
