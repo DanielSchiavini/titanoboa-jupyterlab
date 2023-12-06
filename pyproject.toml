@@ -47,8 +47,8 @@ artifacts = ["titanoboa_jupyterlab/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"titanoboa_jupyterlab/labextension" = "share/jupyter/labextensions/titanoboa-jupyterlab-extension"
-"install.json" = "share/jupyter/labextensions/titanoboa-jupyterlab-extension/install.json"
+"titanoboa_jupyterlab/labextension" = "share/jupyter/labextensions/titanoboa_jupyterlab"
+"install.json" = "share/jupyter/labextensions/titanoboa_jupyterlab/install.json"
 "jupyter-config/server-config" = "etc/jupyter/jupyter_server_config.d"
 
 [tool.hatch.build.hooks.version]

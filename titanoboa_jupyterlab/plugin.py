@@ -13,6 +13,8 @@ from sys import stdout, stderr
 import ipykernel.comm
 
 from eth_utils import to_checksum_address
+import IPython.display as frontend
+
 
 ZMQ_POLLOUT = 2  # zmq.POLLOUT without zmq dependency
 
@@ -75,7 +77,6 @@ class _UIComm(ipykernel.comm.Comm):
         stdout.flush()
         stderr.flush()
 
-
     async def _replay(self):
         k = self._kernel
         self._restore()
@@ -105,7 +106,6 @@ class _UIComm(ipykernel.comm.Comm):
                     k._publish_status("idle")
 
                 await sleep(0.001)
-
 
     async def do_one_iteration(self):
         try:
@@ -137,7 +137,6 @@ class _UIComm(ipykernel.comm.Comm):
             await sleep(0.001)
 
             await self.do_one_iteration()
-
 
     @staticmethod
     @contextmanager
@@ -232,5 +231,4 @@ class BrowserSigner:
 
         # cast js bigint values
         response = {k: try_cast_int(v) for (k, v) in response.items()}
-
         return response
