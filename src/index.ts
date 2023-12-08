@@ -1,6 +1,6 @@
-import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
+import { JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { BrowserProvider, Eip1193Provider, TransactionRequest } from 'ethers';
-import { sendTransaction, setSigner } from './api';
+import { sendCallback } from './api';
 
 /**
  * Load the signer via ethers user and store it in the backend.
@@ -10,7 +10,7 @@ const loadSigner = async (token: string) => {
   const provider = getProvider();
   const signer = await provider.getSigner();
   const address = await signer.getAddress();
-  return setSigner(token, address);
+  return sendCallback(token, address);
 };
 
 /**
@@ -21,7 +21,7 @@ const signTransaction = async (token: string, transaction: TransactionRequest) =
   const provider = getProvider();
   const signer = await provider.getSigner();
   const response = await signer.sendTransaction(transaction);
-  return sendTransaction(token, response);
+  return sendCallback(token, response);
 };
 
 declare global {
@@ -51,9 +51,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
    * Activate the extension and register the callbacks that are used by the
    * BrowserSigner to interact with `ethers`.
    */
-  activate: async (app: JupyterFrontEnd) => {
+  activate: () => {
     window._titanoboa = {loadSigner, signTransaction};
-    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!', app, window._titanoboa);
+    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!');
   }
 };
 

@@ -1,42 +1,38 @@
 from http import HTTPStatus
+from multiprocessing.shared_memory import SharedMemory
 
 import tornado
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
 
-from titanoboa_jupyterlab.helpers import validate_callback_token
-from titanoboa_jupyterlab.memory import SharedMemory
+BaseAPIHandler = APIHandler
 
 
-class BaseAPIHandler(APIHandler):
-    memory: SharedMemory
-
-    def initialize(self):
-        """ Initialize the shared memory object when the request is received. """
-        self.memory = SharedMemory()
-
-    def finish(self, *args, **kwargs):
-        """ Close the shared memory object after the request is finished. """
-        super().finish(*args, **kwargs)
-        self.memory.close()
-
-
-class SetSignerHandler(BaseAPIHandler):
+class CallbackHandler(BaseAPIHandler):
     @tornado.web.authenticated  # ensure only authorized user can request the Jupyter server
-    @validate_callback_token # ensure the token is valid and inject the data into the handler method
-    def post(self, token: str, data: dict) -> None:
-        self.memory.addresses[token] = data["address"]
-        self.set_status(HTTPStatus.NO_CONTENT)
-        self.finish()
+    def post(self, token: str):
+        body = self.request.body
+        if not isinstance(body, bytes):
+            self.set_status(HTTPStatus.BAD_REQUEST)
+            return self.finish({"message": "Request body must be bytes"})
 
+        try:
+            memory = SharedMemory(token)
+        except FileNotFoundError:
+            self.set_status(HTTPStatus.NOT_FOUND)
+            return self.finish({"message": f"Invalid token: {token}"})
 
-class SignTransactionHandler(BaseAPIHandler):
-    @tornado.web.authenticated  # ensure only authorized user can request the Jupyter server
-    @validate_callback_token # ensure the token is valid and inject the data into the handler method
-    def post(self, token: str, data: dict) -> None:
-        self.memory.signatures[token] = data
+        try:
+            body += b"\0"  # mark the end of the buffer
+            memory.buf[:len(body)] = body
+        except ValueError:
+            self.set_status(HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+            return self.finish({"message": f"Request body has {len(body)} bytes, but only {memory.size} are allowed"})
+        finally:
+            memory.close()
+
         self.set_status(HTTPStatus.NO_CONTENT)
-        self.finish()
+        return self.finish()
 
 
 def setup_handlers(server_app) -> None:
@@ -48,10 +44,6 @@ def setup_handlers(server_app) -> None:
     base_url = url_path_join(web_app.settings["base_url"], "titanoboa-jupyterlab")
     web_app.add_handlers(
         host_pattern=".*$",
-        host_handlers=[
-            (f"{base_url}/set_signer", SetSignerHandler),
-            (f"{base_url}/send_transaction", SignTransactionHandler),
-        ]
+        host_handlers=[(rf"{base_url}/callback/(\w+)", CallbackHandler)]
     )
-    validate_callback_token.log = server_app.log
     server_app.log.info(f"Handlers registered in {base_url}")

@@ -1,6 +1,5 @@
 import { URLExt } from '@jupyterlab/coreutils';
 import { ServerConnection } from '@jupyterlab/services';
-import { TransactionResponse } from 'ethers';
 import { getReplay, saveReplay } from './replay';
 
 /**
@@ -16,21 +15,21 @@ async function requestAPI<T>(
 ): Promise<T> {
   // Make request to Jupyter API
   const settings = ServerConnection.makeSettings();
-  const requestUrl = URLExt.join(
+  const url = URLExt.join(
     settings.baseUrl,
     'titanoboa-jupyterlab', // API Namespace
     endPoint
   );
 
-  const initJson = JSON.stringify(init);
-  const replay = getReplay(requestUrl, initJson);
+  const replay = getReplay(url);
   if (replay) {
+    console.log('Replaying request', url);
     return replay.response as T;
   }
 
   let response: Response;
   try {
-    response = await ServerConnection.makeRequest(requestUrl, init, settings);
+    response = await ServerConnection.makeRequest(url, init, settings);
   } catch (error) {
     throw new ServerConnection.NetworkError(error as any);
   }
@@ -48,7 +47,7 @@ async function requestAPI<T>(
   if (!response.ok) {
     throw new ServerConnection.ResponseError(response, data.message || data);
   }
-  saveReplay(requestUrl, initJson, data);
+  saveReplay(url, data);
   return data;
 }
 
@@ -58,24 +57,14 @@ const stringify = (data: unknown) => JSON.stringify(data, (_, v) => typeof v ===
 /**
  * Sends the signature to the server
  * @param token The token to identify the BrowserSigner instance
- * @param response The transaction details
+ * @param data The signature data
  * @returns A promise that resolves when the transaction is sent to the server
  */
-export function sendTransaction(token: string, response: TransactionResponse) {
-  return requestAPI<void>('send_transaction', {
+export async function sendCallback(token: string, data: unknown) {
+  const response = await requestAPI<void>(`callback/${token}`, {
     method: 'POST',
-    body: stringify({ ...response, token })
+    body: stringify(data)
   });
-}
-
-/**
- * Sets the signer for the given token
- * @param token The token to identify the BrowserSigner instance
- * @param address The address of the signer
- */
-export function setSigner(token: string, address: string) {
-  return requestAPI<void>('set_signer', {
-    method: 'POST',
-    body: JSON.stringify({ address, token })
-  });
+  console.log(`Sent callback to ${token}`, response);
+  return response;
 }
