@@ -1,7 +1,3 @@
-/**
- * Example of [Jest](https://jestjs.io/docs/getting-started) unit tests
- */
-
 import plugin from '../index';
 
 describe('titanoboa-jupyterlab-extension', () => {
@@ -14,6 +10,6 @@ describe('titanoboa-jupyterlab-extension', () => {
     expect(window._titanoboa).toEqual({
       loadSigner: expect.any(Function),
       signTransaction: expect.any(Function)
-    })
+    });
   });
 });
