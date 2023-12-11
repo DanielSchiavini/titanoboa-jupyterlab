@@ -1,4 +1,5 @@
 import json
+import logging
 from asyncio import sleep, get_running_loop
 from datetime import timedelta
 from multiprocessing.shared_memory import SharedMemory
@@ -51,7 +52,7 @@ def _create_and_wait(snippet: callable, size: int, **kwargs) -> dict:
     :param kwargs: The arguments to pass to the Javascript snippet.
     :return: The result of the Javascript snippet sent to the API.
     """
-    token = f"titanoboa_jupyterlab_{urandom(_TOKEN_LENGTH).hex()}"
+    token = _generate_token()
     memory = SharedMemory(name=token, create=True, size=size)
     try:
         memory.buf[:1] = _NUL
@@ -60,6 +61,10 @@ def _create_and_wait(snippet: callable, size: int, **kwargs) -> dict:
         return _wait_buffer_set(memory.buf)
     finally:
         memory.unlink()  # get rid of the SharedMemory object after it's been used
+
+
+def _generate_token():
+    return f"titanoboa_jupyterlab_{urandom(_TOKEN_LENGTH).hex()}"
 
 
 def _wait_buffer_set(buffer: memoryview):
@@ -78,7 +83,7 @@ def _wait_buffer_set(buffer: memoryview):
         while buffer.tobytes().startswith(_NUL):
             if inner_loop.time() > deadline:
                 raise TimeoutError("Timeout while waiting for user to confirm transaction in the browser.")
-            await sleep(1)
+            await sleep(0.01)
         return json.loads(buffer.tobytes().decode().split("\0")[0])
 
     loop = get_running_loop()
@@ -95,4 +100,4 @@ def _load_signer_snippet(token: str) -> Javascript:
 
 def _sign_transaction_snippet(token: str, tx_data):
     """ Runs the signTransaction in the browser. """
-    return Javascript(f"window._titanoboa.signTransaction('{token}', {json.dumps(tx_data)})")
+    return Javascript(f"window._titanoboa.signTransaction('{token}', {json.dumps(tx_data)});")

@@ -12,9 +12,9 @@ class CallbackHandler(BaseAPIHandler):
     @tornado.web.authenticated  # ensure only authorized user can request the Jupyter server
     def post(self, token: str):
         body = self.request.body
-        if not isinstance(body, bytes):
+        if not body:
             self.set_status(HTTPStatus.BAD_REQUEST)
-            return self.finish({"message": "Request body must be bytes"})
+            return self.finish({"message": "Request body is required"})
 
         try:
             memory = SharedMemory(token)
