@@ -5,9 +5,14 @@
       <excludeFolder url="file://$MODULE_DIR$/.hypothesis" />
       <excludeFolder url="file://$MODULE_DIR$/.ipynb_checkpoints" />
       <excludeFolder url="file://$MODULE_DIR$/.yarn" />
-      <excludeFolder url="file://$MODULE_DIR$/titanoboa_jupyterlab/labextension/static" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/titanoboa_jupyterlab/labextension" />
+      <excludeFolder url="file://$MODULE_DIR$/titanoboa_jupyterlab/tests/.hypothesis" />
+      <excludeFolder url="file://$MODULE_DIR$/ui-tests/.yarn" />
+      <excludeFolder url="file://$MODULE_DIR$/ui-tests/playwright-report" />
+      <excludeFolder url="file://$MODULE_DIR$/ui-tests/test-results" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
