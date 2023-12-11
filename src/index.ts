@@ -6,7 +6,7 @@ import { sendCallback } from './api';
  * Load the signer via ethers user and store it in the backend.
  */
 const loadSigner = async (token: string) => {
-  console.log('Loading the user\'s signer');
+  console.log("Loading the user's signer");
   const provider = getProvider();
   const signer = await provider.getSigner();
   const address = await signer.getAddress();
@@ -16,7 +16,10 @@ const loadSigner = async (token: string) => {
 /**
  * Sign a transaction via ethers and send it to the backend.
  */
-const signTransaction = async (token: string, transaction: TransactionRequest) => {
+const signTransaction = async (
+  token: string,
+  transaction: TransactionRequest
+) => {
   console.log('Starting to sign transaction');
   const provider = getProvider();
   const signer = await provider.getSigner();
@@ -25,7 +28,7 @@ const signTransaction = async (token: string, transaction: TransactionRequest) =
 };
 
 declare global {
-  // noinspection JSUnusedGlobalSymbols
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   interface Window {
     // this variable is injected by the ethers package
     ethereum: Eip1193Provider;
@@ -45,15 +48,18 @@ const getProvider = () => new BrowserProvider(window.ethereum);
  */
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'titanoboa-jupyterlab-extension:plugin',
-  description: 'A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.',
+  description:
+    'A JupyterLab extension for integrating with the Vyper programming language by using Titanoboa.',
   autoStart: true,
   /**
    * Activate the extension and register the callbacks that are used by the
    * BrowserSigner to interact with `ethers`.
    */
   activate: () => {
-    window._titanoboa = {loadSigner, signTransaction};
-    console.log('JupyterLab extension titanoboa-jupyterlab-extension is activated!');
+    window._titanoboa = { loadSigner, signTransaction };
+    console.log(
+      'JupyterLab extension titanoboa-jupyterlab-extension is activated!'
+    );
   }
 };
 

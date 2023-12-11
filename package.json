@@ -98,14 +98,14 @@
     },
     "jupyterlab": {
         "discovery": {
-        "server": {
-            "managers": [
-                "pip"
-            ],
-            "base": {
-                "name": "titanoboa_jupyterlab"
+            "server": {
+                "managers": [
+                    "pip"
+                ],
+                "base": {
+                    "name": "titanoboa_jupyterlab"
+                }
             }
-        }
         },
         "extension": true,
         "outputDir": "titanoboa_jupyterlab/labextension"

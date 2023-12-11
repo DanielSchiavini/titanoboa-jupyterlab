@@ -11,10 +11,10 @@ kind: server
 labextension_name: titanoboa-jupyterlab-extension
 mimetype: ''
 mimetype_name: ''
-project_short_description: A JupyterLab extension for integrating with the Vyper programming
-    language by using Titanoboa.
+project_short_description:
+  A JupyterLab extension for integrating with the Vyper programming
+  language by using Titanoboa.
 python_name: titanoboa_jupyterlab
 repository: https://github.com/DanielSchiavini/titanoboa-jupyterlab
 test: true
 viewer_name: ''
-

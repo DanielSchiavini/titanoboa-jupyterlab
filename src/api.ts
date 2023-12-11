@@ -52,7 +52,8 @@ async function requestAPI<T>(
 }
 
 /** Stringify data, converting BigInts to strings */
-const stringify = (data: unknown) => JSON.stringify(data, (_, v) => typeof v === 'bigint' ? v.toString() : v);
+const stringify = (data: unknown) =>
+  JSON.stringify(data, (_, v) => (typeof v === 'bigint' ? v.toString() : v));
 
 /**
  * Sends the signature to the server
